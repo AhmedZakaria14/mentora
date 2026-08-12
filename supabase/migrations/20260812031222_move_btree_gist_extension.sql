@@ -1,0 +1,3 @@
+-- This migration version exists in production migration history.
+-- The btree_gist move is idempotently included in the preceding hardening migration
+-- so fresh preview databases reach the same schema while history stays aligned.
