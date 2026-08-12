@@ -55,8 +55,9 @@ Apply the migrations in order:
 5. `0005_secure_applications_and_holds.sql`
 6. `0006_google_provider_token_vault.sql`
 7. `0007_encrypt_google_tokens_and_lock_access.sql`
+8. `0008_lock_security_definer_rpc_grants.sql`
 
-`0007` creates a random per-project Google token encryption key in Supabase Vault if one does not already exist.
+`0007` creates a random per-project Google token encryption key in Supabase Vault if one does not already exist. `0008` removes anonymous execution rights from privileged booking, onboarding, and mentor-application RPCs.
 
 ## Google Auth / Workspace setup
 
