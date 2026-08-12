@@ -11,11 +11,12 @@ export async function GET(request: Request) {
     provider: "google",
     options: {
       redirectTo: `${url.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`,
-      queryParams: { access_type: "offline", prompt: "select_account" },
+      queryParams: { prompt: "select_account" },
     },
   });
 
   if (error || !data.url) {
+    console.error("Google sign-in start failed", error);
     return NextResponse.redirect(new URL("/login?error=google_signin", url.origin));
   }
 
