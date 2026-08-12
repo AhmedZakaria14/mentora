@@ -10,6 +10,10 @@ export function Header() {
       <Link href="/pricing">الأسعار</Link>
       <Link href="/become-a-mentor">انضم كخبير</Link>
     </nav>
-    <div className="navActions"><button className="ghost">EN</button><Link href="/dashboard" className="btn small">ابدأ الآن</Link></div>
+    <div className="navActions">
+      <button className="ghost" type="button">EN</button>
+      <Link href="/login" className="ghost">تسجيل الدخول</Link>
+      <Link href="/auth/google" className="btn small">ابدأ الآن</Link>
+    </div>
   </div></header>
 }
