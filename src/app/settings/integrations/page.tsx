@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata = { title: "التكاملات" };
 export const dynamic = "force-dynamic";
@@ -12,7 +11,8 @@ const messages: Record<string, string> = {
   connected: "تم ربط حساب Google بنجاح.",
   disconnected: "تم فصل حساب Google.",
   denied: "تم إلغاء طلب صلاحيات Google.",
-  error: "تعذر إكمال ربط Google. تحقق من الإعدادات ثم حاول مرة أخرى.",
+  missing_provider_token: "تم تسجيل الدخول، لكن Google لم يمنح رمز Workspace المطلوب. أعد الربط ووافق على الصلاحيات.",
+  error: "تعذر إكمال ربط Google. تحقق من الصلاحيات ثم حاول مرة أخرى.",
 };
 
 export default async function IntegrationsPage({ searchParams }: { searchParams: SearchParams }) {
@@ -21,13 +21,8 @@ export default async function IntegrationsPage({ searchParams }: { searchParams:
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/settings/integrations");
 
-  const admin = createAdminClient();
-  const { data: connection } = await admin
-    .from("google_connections")
-    .select("google_email,enabled_features,granted_scopes,updated_at")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
+  const { data: rows } = await supabase.rpc("get_google_connection_summary");
+  const connection = Array.isArray(rows) ? rows[0] : null;
   const enabled = new Set<string>(connection?.enabled_features ?? []);
   const statusMessage = params.google ? messages[params.google] : null;
 
@@ -60,7 +55,7 @@ export default async function IntegrationsPage({ searchParams }: { searchParams:
 
     <div className="panel" style={{maxWidth:860,marginBottom:80}}>
       <b>الخصوصية والصلاحيات</b>
-      <p className="muted" style={{fontSize:13,marginBottom:0}}>تسجيل الدخول إلى Mentora منفصل عن منح صلاحيات Workspace. لا نعرض محتوى أحداث تقويمك للمتدربين، ويمكنك فصل Google في أي وقت.</p>
+      <p className="muted" style={{fontSize:13,marginBottom:0}}>تسجيل الدخول الأساسي لا يمنح صلاحيات Calendar أو Meet أو Chat. يتم طلبها فقط عند تفعيل Workspace، ويمكنك فصل الربط في أي وقت.</p>
     </div>
   </main>;
 }
