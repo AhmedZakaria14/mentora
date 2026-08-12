@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./home.css";
 import { Header } from "@/components/Header";
 import { appConfig } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: { default: `${appConfig.name} | خبراء 1:1`, template: `%s | ${appConfig.name}` },
-  description: "احجز جلسة شخصية 1:1 مع خبراء موثوقين في التسويق، الأعمال، البرمجة، الإدارة والمزيد.",
+  title: { default: `${appConfig.name} | خبراء ومرشدون 1:1`, template: `%s | ${appConfig.name}` },
+  description: "تحدث مباشرة مع خبير سبق أن واجه التحدي الذي تواجهه. جلسات شخصية 1:1 في التسويق، الأعمال، المنتج، التقنية، القيادة والمزيد.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
