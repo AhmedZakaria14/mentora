@@ -3,6 +3,7 @@ import "./globals.css";
 import "./home.css";
 import "./explore.css";
 import "./profile.css";
+import "./dashboard.css";
 import "./auth.css";
 import { Header } from "@/components/Header";
 import { appConfig } from "@/lib/config";
