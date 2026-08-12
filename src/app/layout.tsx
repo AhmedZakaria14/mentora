@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./home.css";
 import "./explore.css";
+import "./profile.css";
 import "./auth.css";
 import { Header } from "@/components/Header";
 import { appConfig } from "@/lib/config";
