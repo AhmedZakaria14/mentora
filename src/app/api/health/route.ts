@@ -1,16 +1,31 @@
 import { NextResponse } from "next/server";
+import { supabasePublicConfig } from "@/lib/supabase/config";
 
 export async function GET() {
+  let googleProvider = false;
+  let authReachable = false;
+
+  try {
+    const response = await fetch(`${supabasePublicConfig.url}/auth/v1/settings`, {
+      headers: { apikey: supabasePublicConfig.publishableKey },
+      cache: "no-store",
+    });
+    authReachable = response.ok;
+    if (response.ok) {
+      const settings = await response.json() as { external?: Record<string, boolean> };
+      googleProvider = settings.external?.google === true;
+    }
+  } catch {
+    authReachable = false;
+  }
+
   const checks = {
-    supabaseUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    supabasePublishableKey: Boolean(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY),
-    supabaseServiceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-    googleClientId: Boolean(process.env.GOOGLE_CLIENT_ID),
-    googleClientSecret: Boolean(process.env.GOOGLE_CLIENT_SECRET),
-    googleRedirectUri: Boolean(process.env.GOOGLE_REDIRECT_URI),
-    googleStateSecret: Boolean(process.env.GOOGLE_OAUTH_STATE_SECRET),
+    supabaseConfigured: Boolean(supabasePublicConfig.url && supabasePublicConfig.publishableKey),
+    supabaseAuthReachable: authReachable,
+    googleProviderEnabled: googleProvider,
   };
   const ready = Object.values(checks).every(Boolean);
+
   return NextResponse.json({
     ok: true,
     service: "mentora",
