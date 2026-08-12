@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MentorCard } from "@/components/MentorCard";
+import { UiIcon } from "@/components/UiIcon";
 import { demoMentors } from "@/lib/demo-data";
 
 export const metadata = { title: "استكشف الخبراء" };
@@ -45,52 +46,65 @@ export default async function ExplorePage({ searchParams }: { searchParams: Prom
   const ranked = demoMentors
     .map((mentor) => ({ mentor, score: scoreMentor(query, mentor) }))
     .sort((a, b) => b.score - a.score);
-  const hasMeaningfulMatch = query && ranked.some((item) => item.score > 1);
+  const hasMeaningfulMatch = Boolean(query) && ranked.some((item) => item.score > 1);
   const visible = hasMeaningfulMatch ? ranked.filter((item) => item.score > 1) : ranked;
   const topic = query ? inferTopic(query) : undefined;
 
   return (
-    <main className="explorePage">
-      <section className="exploreHero">
-        <div className="shell exploreHeroInner">
-          <div>
-            <span className="kicker">شبكة الخبراء</span>
-            <h1>{query ? "وجدنا لك أقرب الخبرات لمشكلتك" : "ابحث عن الشخص المناسب لمشكلتك"}</h1>
-            <p>{query ? <>بحثك: <b>“{query}”</b>{topic ? <> • أقرب مجال: <strong>{topic}</strong></> : null}</> : "ابحث بالمهارة أو اكتب المشكلة بطريقتك، ثم قارن بين الخبرة والسعر واللغة والموعد."}</p>
+    <main className="explorePage proExplorePage">
+      <section className="exploreHero proExploreHero">
+        <div className="shell exploreHeroInner proExploreHeroInner">
+          <div className="exploreIntro">
+            <span className="sectionKicker">شبكة الخبراء</span>
+            <h1>{query ? "خبرات أقرب إلى التحدي الذي وصفته" : "ابدأ بالمشكلة، ثم اختر الخبرة المناسبة."}</h1>
+            <p>
+              {query ? <><span>بحثك</span><b>“{query}”</b>{topic ? <em>أقرب مجال: {topic}</em> : null}</> : "اكتب المشكلة بلغتك، أو ابحث بالمهارة. بعدها قارن الخبرة والسعر واللغة والموعد قبل الحجز."}
+            </p>
           </div>
-          <form className="exploreSearch" action="/explore">
-            <span>⌕</span>
-            <input name="q" defaultValue={query} aria-label="ابحث عن خبير" placeholder="مثال: إعلاناتي لا تحقق مبيعات، SEO، إدارة منتج..." />
-            <button className="btn" type="submit">بحث</button>
+
+          <form className="exploreSearch proExploreSearch" action="/explore">
+            <UiIcon name="search" size={20}/>
+            <input name="q" defaultValue={query} aria-label="ابحث عن خبير" placeholder="مثال: إعلاناتي لا تحقق مبيعات، SEO، إطلاق منتج..." />
+            <button className="btn" type="submit">بحث <UiIcon name="arrow" size={16}/></button>
           </form>
         </div>
       </section>
 
-      <section className="shell exploreContent">
-        <div className="exploreToolbar">
-          <div className="filterChips"><span className="active">الأفضل تطابقًا</span><span>المهارة</span><span>اللغة</span><span>السعر</span><span>أقرب موعد</span></div>
-          <small>{visible.length} نتائج تجريبية</small>
+      <section className="shell exploreContent proExploreContent">
+        <div className="exploreControlRow">
+          <div className="resultSummary">
+            <b>{visible.length}</b>
+            <span>{query ? "نتائج قريبة من بحثك" : "خبراء في النسخة التجريبية"}</span>
+          </div>
+          <div className="filterChips proFilterChips" aria-label="فلاتر الاستكشاف">
+            <button className="active" type="button">الأفضل تطابقًا</button>
+            <button type="button">المهارة</button>
+            <button type="button">اللغة</button>
+            <button type="button">السعر</button>
+            <button type="button">أقرب موعد</button>
+          </div>
         </div>
 
         {query ? (
-          <div className="matchExplanation">
-            <span>✦</span>
-            <div><b>كيف رتبنا النتائج؟</b><p>نطابق كلمات مشكلتك مع تخصصات الخبراء والمهارات المتاحة حاليًا. المرحلة التالية ستستبدل هذا الترتيب ببيانات الخبراء الحقيقية ومحرك المطابقة الدلالية.</p></div>
+          <div className="matchExplanation proMatchExplanation">
+            <div className="matchExplanationIcon"><UiIcon name="spark" size={19}/></div>
+            <div><b>كيف رتبنا هذه النتائج؟</b><p>الترتيب الحالي تجريبي ويعتمد على كلمات المشكلة والمهارات الموجودة في ملفات العرض. قبل الإطلاق سنربطه ببيانات الخبراء الحقيقية ومحرك مطابقة دلالي.</p></div>
           </div>
         ) : null}
 
-        <div className="mentorGrid exploreMentorGrid">
+        <div className="mentorGrid exploreMentorGrid proResultGrid">
           {visible.map(({ mentor, score }) => (
-            <div className="rankedMentor" key={mentor.id}>
-              {query && score > 1 ? <span className="matchScore">{Math.min(98, 72 + score * 2)}% تطابق</span> : null}
+            <div className="rankedMentor proRankedMentor" key={mentor.id}>
+              {query && score > 1 ? <span className="matchScore proMatchScore"><UiIcon name="target" size={13}/>{Math.min(98, 72 + score * 2)}% تطابق مبدئي</span> : null}
               <MentorCard mentor={mentor} />
             </div>
           ))}
         </div>
 
-        <div className="exploreRealityNote">
-          <div><b>الخبراء المعروضون الآن نماذج للواجهة.</b><p>لن ننشر أي خبير للعامة قبل اكتمال طلبه واعتماده من لوحة الإدارة.</p></div>
-          <Link href="/become-a-mentor" className="textCta darkTextCta">تقدّم كخبير ←</Link>
+        <div className="exploreRealityNote proRealityNote">
+          <div className="realityIcon"><UiIcon name="shield" size={20}/></div>
+          <div><b>هذه ملفات توضيحية وليست خبراء منشورين فعليًا.</b><p>لن يظهر أي خبير للعامة قبل إكمال طلبه واعتماده. نستخدم هذه النماذج لبناء تجربة المنتج دون اختلاق Social Proof.</p></div>
+          <Link href="/become-a-mentor" className="textLink">تقدّم كخبير <UiIcon name="arrow" size={16}/></Link>
         </div>
       </section>
     </main>
