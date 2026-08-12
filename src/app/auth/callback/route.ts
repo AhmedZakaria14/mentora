@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
+  const siteUrl = getSiteUrl();
   const code = url.searchParams.get("code");
   const next = url.searchParams.get("next") || "/dashboard";
   const workspace = url.searchParams.get("workspace") === "1";
@@ -15,7 +17,7 @@ export async function GET(request: Request) {
     .filter(Boolean);
 
   if (!code) {
-    return NextResponse.redirect(new URL("/login?error=missing_code", url.origin));
+    return NextResponse.redirect(new URL("/login?error=missing_code", siteUrl));
   }
 
   const supabase = await createClient();
@@ -23,7 +25,7 @@ export async function GET(request: Request) {
 
   if (error || !data.session) {
     console.error("OAuth callback exchange failed", error);
-    return NextResponse.redirect(new URL("/login?error=oauth_callback", url.origin));
+    return NextResponse.redirect(new URL("/login?error=oauth_callback", siteUrl));
   }
 
   if (workspace) {
@@ -31,7 +33,7 @@ export async function GET(request: Request) {
     const providerRefreshToken = data.session.provider_refresh_token;
 
     if (!providerToken) {
-      return NextResponse.redirect(new URL("/settings/integrations?google=missing_provider_token", url.origin));
+      return NextResponse.redirect(new URL("/settings/integrations?google=missing_provider_token", siteUrl));
     }
 
     const { error: storeError } = await supabase.rpc("store_google_provider_tokens", {
@@ -43,12 +45,12 @@ export async function GET(request: Request) {
 
     if (storeError) {
       console.error("Could not store Google provider tokens", storeError);
-      return NextResponse.redirect(new URL("/settings/integrations?google=error", url.origin));
+      return NextResponse.redirect(new URL("/settings/integrations?google=error", siteUrl));
     }
   }
 
   const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
-  const destination = new URL(safeNext, url.origin);
+  const destination = new URL(safeNext, siteUrl);
   if (workspace) destination.searchParams.set("google", "connected");
   return NextResponse.redirect(destination);
 }
