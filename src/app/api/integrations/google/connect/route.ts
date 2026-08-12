@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    const next = `/settings/integrations`;
+    const next = "/settings/integrations";
     return NextResponse.redirect(new URL(`/login?next=${encodeURIComponent(next)}`, request.url));
   }
 
@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
   callback.searchParams.set("next", returnTo);
   callback.searchParams.set("workspace", "1");
   callback.searchParams.set("features", features.join(","));
+  callback.searchParams.set("scopes", scopes.join(","));
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
