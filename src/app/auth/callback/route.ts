@@ -9,6 +9,10 @@ export async function GET(request: Request) {
   const features = (url.searchParams.get("features") || "calendar,meet,chat")
     .split(",")
     .filter((value) => ["calendar", "meet", "chat"].includes(value));
+  const scopes = (url.searchParams.get("scopes") || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
 
   if (!code) {
     return NextResponse.redirect(new URL("/login?error=missing_code", url.origin));
@@ -34,7 +38,7 @@ export async function GET(request: Request) {
       p_access_token: providerToken,
       p_refresh_token: providerRefreshToken ?? null,
       p_features: features,
-      p_scopes: [],
+      p_scopes: scopes,
     });
 
     if (storeError) {
