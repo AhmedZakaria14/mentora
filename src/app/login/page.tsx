@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GoogleSignInButton } from "./GoogleSignInButton";
+import { UiIcon } from "@/components/UiIcon";
 
 const errorMessages: Record<string, string> = {
   google_signin: "تعذر بدء تسجيل الدخول عبر Google.",
@@ -16,30 +17,31 @@ export default async function LoginPage({
   const safeNext = next?.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
 
   return (
-    <main className="loginPage">
+    <main className="loginPage proLoginPage">
       <div className="loginGlow loginGlowOne" />
       <div className="loginGlow loginGlowTwo" />
-      <div className="shell loginShell">
-        <section className="loginStory">
-          <span className="pillLabel">Mentora • خبرة حقيقية عند الطلب</span>
-          <h1>لا تضيع أسبوعًا في مشكلة يمكن أن يحلها حوار واحد.</h1>
-          <p>سجّل الدخول ثم أخبرنا أين توقفت. نساعدك في الوصول إلى خبير مناسب، حجز موعد، وإكمال الجلسة عبر Google Meet من مكان واحد.</p>
-          <div className="loginProofs">
-            <span>✓ خبراء يتم التحقق منهم</span>
-            <span>✓ جلسات مباشرة 1:1</span>
-            <span>✓ مطابقة حسب مشكلتك</span>
+      <div className="shell loginShell proLoginShell">
+        <section className="loginStory proLoginStory">
+          <span className="eyebrowPill"><UiIcon name="spark" size={16}/> حساب واحد لكل رحلتك في Mentora</span>
+          <h1>احجز، التقِ بالخبير، وارجع إلى كل ما اتفقتما عليه.</h1>
+          <p>تسجيل الدخول الأساسي يستخدم حساب Google فقط لإنشاء حساب Mentora. صلاحيات Calendar وMeet لا تُطلب إلا لاحقًا عندما تختار ربطها.</p>
+          <div className="loginProofs proLoginProofs">
+            <span><UiIcon name="shield" size={17}/> حساب Mentora مستقل عن صلاحيات Workspace</span>
+            <span><UiIcon name="calendar" size={17}/> حجوزاتك ومواعيدك في مكان واحد</span>
+            <span><UiIcon name="message" size={17}/> الملخصات والرسائل مرتبطة بجلساتك</span>
           </div>
         </section>
 
-        <section className="loginCard">
-          <Link href="/" className="loginBrand">Mentora<span>.</span></Link>
-          <h2>مرحبًا بك</h2>
-          <p className="muted">استخدم حساب Google للمتابعة. تسجيل الدخول الأساسي لا يطلب صلاحيات Calendar أو Meet.</p>
-          {error ? <p className="notice error">{errorMessages[error] || "تعذر تسجيل الدخول. حاول مرة أخرى."}</p> : null}
+        <section className="loginCard proLoginCard">
+          <div className="loginCardBrand"><span className="brandMark">M</span><span>Mentora</span></div>
+          <span className="loginCardKicker">تسجيل الدخول</span>
+          <h2>مرحبًا بك من جديد</h2>
+          <p className="loginCardLead">استخدم حساب Google للمتابعة إلى حسابك.</p>
+          {error ? <div className="loginError"><UiIcon name="shield" size={18}/><span>{errorMessages[error] || "تعذر تسجيل الدخول. حاول مرة أخرى."}</span></div> : null}
           <GoogleSignInButton next={safeNext} />
-          <div className="loginDivider"><span>أو</span></div>
-          <Link className="btn secondaryBtn fullBtn" href="/explore">تصفح الخبراء بدون تسجيل</Link>
-          <p className="loginFinePrint">بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية عند إضافتهما للنسخة النهائية.</p>
+          <div className="loginDivider"><span>لا تريد تسجيل الدخول الآن؟</span></div>
+          <Link className="browseWithoutLogin" href="/explore">تصفح الخبراء أولًا <UiIcon name="arrow" size={16}/></Link>
+          <div className="loginPrivacy"><UiIcon name="shield" size={14}/><p>لن نطلب Calendar أو Meet في هذه الخطوة. ربطهما اختياري ومنفصل داخل إعدادات الحساب.</p></div>
         </section>
       </div>
     </main>
