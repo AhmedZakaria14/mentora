@@ -1,146 +1,187 @@
 import Link from "next/link";
 import { HomeMotion } from "@/components/HomeMotion";
+import { UiIcon } from "@/components/UiIcon";
 import { demoMentors } from "@/lib/demo-data";
 
-const problemTopics = [
-  ["إعلاناتي تصرف ولا تبيع", "الإعلانات المدفوعة"],
-  ["لا أعرف كيف أسعّر خدمتي", "التسعير"],
-  ["أحتاج خطة Go-to-Market", "الاستراتيجية"],
-  ["موقعي لا يظهر في Google", "SEO"],
-  ["أريد إطلاق منتجي بشكل صحيح", "إطلاق المنتجات"],
-  ["أحتاج رأيًا خبيرًا قبل قرار مهم", "إدارة وقيادة"],
+const problems = [
+  "إعلاناتي تصرف ولا تحقق مبيعات",
+  "أحتاج خطة إطلاق واضحة لمنتجي",
+  "موقعي لا يظهر في نتائج Google",
+  "لا أعرف كيف أسعّر خدمتي",
 ];
 
 const categories = [
-  ["↗", "التسويق والنمو", "Growth، Funnels، CRO، المحتوى"],
-  ["◎", "الإعلانات والمبيعات", "Meta Ads، Google Ads، Sales"],
-  ["⌘", "المنتج والتقنية", "Product، AI، UX، Analytics"],
-  ["◫", "الشركات وريادة الأعمال", "GTM، Pricing، Fundraising"],
-  ["⌁", "SEO والمحتوى", "SEO، Content، Search Strategy"],
-  ["♟", "القيادة والمسار المهني", "Leadership، Hiring، Career"],
+  { icon: "chart" as const, title: "التسويق والنمو", text: "Growth، Funnels، CRO، Performance" },
+  { icon: "target" as const, title: "الإعلانات والمبيعات", text: "Meta Ads، Google Ads، Sales" },
+  { icon: "code" as const, title: "المنتج والتقنية", text: "Product، AI، UX، Analytics" },
+  { icon: "briefcase" as const, title: "الأعمال وريادة الشركات", text: "GTM، Pricing، Operations" },
+  { icon: "search" as const, title: "SEO والمحتوى", text: "SEO، Content، Search Strategy" },
+  { icon: "users" as const, title: "القيادة والمسار المهني", text: "Leadership، Hiring، Career" },
+];
+
+const steps = [
+  { n: "01", icon: "message" as const, title: "اشرح التحدي", text: "اكتب ما يحدث بطريقتك. لا تحتاج أن تعرف اسم التخصص أو الحل مسبقًا." },
+  { n: "02", icon: "users" as const, title: "اختر الخبير", text: "قارن الخبرة، المهارات، السعر والموعد، وافهم لماذا هذا الشخص مناسب لمشكلتك." },
+  { n: "03", icon: "calendar" as const, title: "احجز الوقت", text: "اختر الموعد المناسب حسب منطقتك الزمنية، ثم ثبّت الجلسة بخطوات واضحة." },
+  { n: "04", icon: "video" as const, title: "التقِ ونفّذ", text: "ادخل الجلسة عبر Google Meet واخرج بقرار واضح وخطوات عملية قابلة للتنفيذ." },
 ];
 
 export default function Home() {
+  const featured = demoMentors.slice(0, 3);
+
   return (
     <main className="homePage">
       <HomeMotion />
 
-      <section className="gmHero">
-        <div className="heroOrb heroOrbOne" />
-        <div className="heroOrb heroOrbTwo" />
-        <div className="shell gmHeroGrid">
-          <div className="gmHeroCopy" data-reveal>
-            <div className="launchBadge"><span className="statusPulse" /> منصة عربية لجلسات الخبرة 1:1</div>
-            <h1>التقدّم يصبح أسهل<br/><span>عندما لا تحاول وحدك.</span></h1>
-            <p className="heroLead">تحدث مع خبير سبق أن واجه المشكلة التي تواجهها الآن. جلسة مركّزة، نصيحة عملية، وخطوات تعرف ماذا تفعل بعدها.</p>
+      <section className="proNotice" aria-label="تعريف بالمنصة">
+        <div className="shell proNoticeInner">
+          <span className="noticeDot" />
+          <span>منصة عربية لجلسات الخبرة الخاصة 1:1</span>
+          <Link href="/how-it-works">اعرف كيف تعمل <UiIcon name="arrow" size={15} /></Link>
+        </div>
+      </section>
 
-            <form className="heroMatchBox" action="/explore">
-              <div className="heroMatchLabel"><span>✨</span><div><b>ما الذي يوقفك الآن؟</b><small>اكتبها بطريقتك، وسنوجّهك إلى الخبرة المناسبة.</small></div></div>
-              <textarea name="q" aria-label="صف المشكلة التي تريد مساعدة فيها" placeholder="مثال: تكلفة الإعلان ارتفعت والمبيعات لم تتحسن، ولا أعرف هل المشكلة في العرض أم صفحة الهبوط…" />
-              <div className="heroMatchFooter">
-                <div className="miniTrust"><span>مطابقة ذكية</span><span>•</span><span>خبراء موثّقون</span></div>
-                <button className="btn heroPrimary" type="submit">اعثر على خبير مناسب <span>←</span></button>
+      <section className="proHero">
+        <div className="heroGlow heroGlowA" />
+        <div className="heroGlow heroGlowB" />
+        <div className="shell proHeroGrid">
+          <div className="proHeroCopy" data-reveal>
+            <div className="eyebrowPill"><UiIcon name="spark" size={16} /> خبرة مناسبة، في الوقت المناسب</div>
+            <h1>لا تبحث عن نصيحة عامة.<br/><span>تحدث مع شخص فعلها قبلك.</span></h1>
+            <p className="proHeroLead">Mentora توصلك بخبير مناسب لمشكلتك الفعلية، لجلسة خاصة مركّزة تساعدك على اتخاذ قرار أفضل والتحرك بخطوات واضحة.</p>
+
+            <form className="proSearchCard" action="/explore">
+              <label htmlFor="problem">ما الذي تريد حله الآن؟</label>
+              <div className="proSearchInput">
+                <UiIcon name="search" size={22} />
+                <textarea id="problem" name="q" placeholder="مثال: تكلفة الإعلانات ارتفعت والمبيعات ثابتة، ولا أعرف أين المشكلة…" />
+              </div>
+              <div className="proSearchBottom">
+                <div className="proSearchTrust"><UiIcon name="shield" size={16} /><span>خبراء يخضعون للمراجعة قبل الظهور</span></div>
+                <button className="btn proPrimary" type="submit">اعثر على الخبير المناسب <UiIcon name="arrow" size={18} /></button>
               </div>
             </form>
 
-            <div className="heroProofLine">
-              <div className="avatarStack" aria-hidden="true"><span>أ</span><span>س</span><span>ع</span><span>ل</span></div>
-              <p><b>خبرة متعددة بدل رأي واحد.</b> اختر الخبير المناسب لكل مشكلة، في الوقت الذي تحتاجه.</p>
+            <div className="quickProblems" aria-label="أمثلة للبحث">
+              <span>جرّب:</span>
+              {problems.map((problem) => <Link key={problem} href={`/explore?q=${encodeURIComponent(problem)}`}>{problem}</Link>)}
             </div>
           </div>
 
-          <div className="heroProductScene" data-reveal>
-            <div className="sceneGrid" />
-            <div className="floatingLabel floatingLabelTop">متاح اليوم • 7:30 م</div>
-            <div className="mentorMatchWindow">
-              <div className="windowTop"><div className="windowDots"><i/><i/><i/></div><span>Mentora AI Match</span><b>96% توافق</b></div>
-              <div className="queryBubble">أحتاج شخصًا يفهم نمو المتاجر والإعلانات، ويفضل أن يتحدث العربية.</div>
-              <div className="matchCard primaryMatch">
-                <div className="matchAvatar">أح</div>
-                <div><strong>أحمد حسن</strong><span>Growth & Performance</span><small>Meta Ads • Funnels • Ecommerce</small></div>
-                <button aria-label="اختيار أحمد">←</button>
+          <div className="proHeroVisual" data-reveal aria-label="معاينة تجربة Mentora">
+            <div className="visualBackdrop" />
+            <div className="matchPanel">
+              <div className="matchPanelTop">
+                <div><span className="miniBrand">M</span><b>مطابقة الخبراء</b></div>
+                <span className="softStatus"><span /> متاح الآن</span>
               </div>
-              <div className="matchCard fadedMatch">
-                <div className="matchAvatar peach">سق</div><div><strong>سارة القحطاني</strong><span>Product & Startup</span></div><em>91%</em>
+              <div className="matchQuestion">“أحتاج شخصًا يفهم نمو المتاجر والإعلانات ويعطيني رأيًا عمليًا.”</div>
+              <div className="matchedExpert featuredMatch">
+                <div className="expertAvatar">أح</div>
+                <div className="expertMain"><div><strong>أحمد حسن</strong><span className="verifiedDot"><UiIcon name="check" size={11}/></span></div><p>Growth & Performance Marketing</p><small>Meta Ads · Funnels · Ecommerce</small></div>
+                <div className="matchBadge">96%<small>تطابق</small></div>
               </div>
-              <div className="matchReason"><span>✦</span><p><b>لماذا هذا التطابق؟</b><br/>خبرة عملية في نفس نوع التحدي + موعد قريب + اللغة المناسبة.</p></div>
+              <div className="matchedExpert">
+                <div className="expertAvatar expertAvatarAlt">سق</div>
+                <div className="expertMain"><strong>سارة القحطاني</strong><p>Product & Startup Strategy</p></div>
+                <div className="matchBadge subtle">91%<small>تطابق</small></div>
+              </div>
+              <div className="whyMatch"><UiIcon name="spark" size={18}/><div><b>لماذا هذا الترشيح؟</b><p>خبرة في نفس نوع التحدي، لغة مناسبة، وموعد قريب.</p></div></div>
             </div>
-            <div className="sessionFloatCard">
-              <span className="sessionLive"><i/> جلسة مباشرة</span>
-              <strong>استراتيجية النمو</strong>
-              <small>45 دقيقة • Google Meet</small>
-              <div className="sessionFaces"><span>أنت</span><span>أح</span></div>
+
+            <div className="bookingFloat">
+              <div className="bookingFloatIcon"><UiIcon name="calendar" size={19}/></div>
+              <div><small>أقرب موعد</small><strong>اليوم · 7:30 م</strong></div>
             </div>
-            <div className="floatingLabel floatingLabelBottom">✓ تم إعداد ملخص الجلسة</div>
+            <div className="meetFloat">
+              <div className="meetFloatTop"><span><i /> جلسة مؤكدة</span><UiIcon name="video" size={18}/></div>
+              <strong>مراجعة استراتيجية النمو</strong>
+              <small>45 دقيقة · Google Meet</small>
+              <div className="meetPeople"><span>أنت</span><span>أح</span></div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="trustRibbon">
-        <div className="shell trustRibbonInner">
-          <span>خبير تم التحقق منه</span><i/> <span>جلسة مباشرة 1:1</span><i/> <span>Google Meet</span><i/> <span>مواعيد حسب منطقتك الزمنية</span><i/> <span>ملخص وخطوات بعد الجلسة</span>
+      <section className="proofBand">
+        <div className="shell proofGrid">
+          <div><UiIcon name="shield"/><span><b>مراجعة الخبراء</b><small>ملفات لا تظهر للعامة قبل الاعتماد</small></span></div>
+          <div><UiIcon name="clock"/><span><b>موعد واضح</b><small>حسب منطقتك الزمنية</small></span></div>
+          <div><UiIcon name="video"/><span><b>Google Meet</b><small>رابط الجلسة بعد التأكيد</small></span></div>
+          <div><UiIcon name="target"/><span><b>جلسة مركّزة</b><small>على مشكلتك أنت، لا محتوى عام</small></span></div>
         </div>
       </section>
 
-      <section className="homeSection howSection">
+      <section className="proSection featuredExperts">
         <div className="shell">
-          <div className="centerHeading" data-reveal><span className="kicker">كيف تعمل Mentora؟</span><h2>من “أنا عالق” إلى “أعرف الخطوة التالية”.</h2><p>بنية بسيطة تجعل الخبرة تصل إليك عندما تحتاجها، لا بعد أسابيع من البحث.</p></div>
-          <div className="journeyGrid">
-            <article className="journeyCard matchJourney" data-reveal>
-              <span className="stepNumber">1</span><div className="journeyTitle"><small>AI Matching</small><h3>اشرح مشكلتك كما هي</h3></div>
-              <div className="miniMatchUi"><p>“أريد تحسين التحويل بدون زيادة ميزانية الإعلانات.”</p><div><span>96%</span><b>Growth & CRO</b><small>تطابق قوي</small></div><div><span>92%</span><b>Ecommerce</b><small>متاح غدًا</small></div></div>
-              <p className="journeyCopy">نرشح الخبرة الأقرب لهدفك، مع إمكانية التصفية حسب المهارة والسعر واللغة والموعد.</p>
-            </article>
-            <article className="journeyCard callJourney" data-reveal>
-              <span className="stepNumber">2</span><div className="journeyTitle"><small>جلسة 1:1</small><h3>تحدث مع شخص فعلها قبلك</h3></div>
-              <div className="callMock"><div className="callPerson"><span>أح</span><b>جلسة مباشرة</b></div><div className="callTimer">28:42</div><div className="waveform">{Array.from({length:18}).map((_,i)=><i key={i}/>)}</div></div>
-              <p className="journeyCopy">جلسة مركزة على مشكلتك أنت، بعيدًا عن المحتوى العام والنصائح المكررة.</p>
-            </article>
-            <article className="journeyCard recapJourney" data-reveal>
-              <span className="stepNumber">3</span><div className="journeyTitle"><small>بعد الجلسة</small><h3>اخرج بخطة قابلة للتنفيذ</h3></div>
-              <div className="recapMock"><div><span>✓</span><p><b>القرار</b> ابدأ بتحسين العرض قبل زيادة الميزانية.</p></div><div><span>→</span><p><b>التالي</b> اختبر صفحة هبوط جديدة خلال 7 أيام.</p></div><div><span>✦</span><p><b>ملخص ذكي</b> أهم النقاط محفوظة داخل حسابك.</p></div></div>
-              <p className="journeyCopy">احتفظ بالنتيجة والخطوات في مكان واحد وارجع للخبير عند الحاجة.</p>
-            </article>
+          <div className="sectionHeading splitHeading" data-reveal>
+            <div><span className="sectionKicker">استكشف الخبراء</span><h2>اعثر على خبرة تعرف طريق المشكلة.</h2><p>هذه الملفات المعروضة حاليًا نماذج توضيحية للواجهة إلى أن يتم اعتماد الخبراء الحقيقيين.</p></div>
+            <Link href="/explore" className="textLink">عرض كل الخبراء <UiIcon name="arrow" size={17}/></Link>
+          </div>
+          <div className="proExpertGrid">
+            {featured.map((mentor, index) => (
+              <Link href={`/mentors/${mentor.slug}`} className="proExpertCard" key={mentor.id} data-reveal>
+                <div className="expertCardTop">
+                  <div className={`profileAvatar avatarTone${index + 1}`}>{mentor.name.split(" ").map((part) => part[0]).join("")}</div>
+                  <span className="demoChip">نموذج</span>
+                </div>
+                <div className="expertIdentity"><h3>{mentor.name}<span className="verifiedDot"><UiIcon name="check" size={11}/></span></h3><p>{mentor.headline}</p></div>
+                <div className="proSkills">{mentor.skills.slice(0,3).map((skill) => <span key={skill}>{skill}</span>)}</div>
+                <div className="expertAvailability"><span className="availabilityDot"/><span>أقرب موعد: {mentor.nextAvailable}</span></div>
+                <div className="expertCardBottom"><div><small>تبدأ الجلسة من</small><strong>{mentor.priceFrom} {mentor.currency}</strong></div><span className="circleArrow"><UiIcon name="arrow" size={18}/></span></div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="problemStripSection">
-        <div className="shell" data-reveal>
-          <div className="problemStripHead"><span className="kicker">أمثلة لما يمكنك أن تأتي به</span><h2>لا تحتاج أن تعرف اسم التخصص. فقط أخبرنا بما يحدث.</h2></div>
-          <div className="problemPills">{problemTopics.map(([problem,topic])=><Link href={`/explore?q=${encodeURIComponent(problem)}`} key={problem}><b>“{problem}”</b><span>→ {topic}</span></Link>)}</div>
-        </div>
-      </section>
-
-      <section className="homeSection explorerSection">
-        <div className="shell explorerGrid">
-          <div className="explorerCopy" data-reveal><span className="kicker">استكشف شبكة الخبراء</span><h2>مشكلة مختلفة؟ اختر خبيرًا مختلفًا.</h2><p>ليس الهدف أن تجد “مرشدًا واحدًا لكل شيء”. الشخص المناسب للتسعير قد لا يكون هو الأنسب للإعلانات أو المنتج. Mentora مصممة لتصل إلى الخبرة المناسبة لكل قرار.</p><ul><li>تصفية حسب المهارة والتخصص</li><li>اللغة والدولة والمنطقة الزمنية</li><li>السعر وأقرب موعد متاح</li><li>ملفات شخصية واضحة قبل الحجز</li></ul><Link href="/explore" className="btn">استكشف الخبراء <span>←</span></Link></div>
-          <div className="explorerMock" data-reveal>
-            <div className="explorerSearch"><span>⌕</span><p>ابحث بالاسم أو المهارة…</p><kbd>⌘ K</kbd></div>
-            <div className="filterRow"><span>المهارة</span><span>الدولة</span><span>اللغة</span><span>الموعد</span></div>
-            <div className="demoNotice">نماذج توضيحية للواجهة حتى يتم اعتماد الخبراء الحقيقيين</div>
-            {demoMentors.slice(0,3).map((mentor,index)=><Link href={`/mentors/${mentor.slug}`} className="explorerMentor" key={mentor.id}><div className={`explorerAvatar tone${index+1}`}>{mentor.name.split(" ").map(n=>n[0]).join("")}</div><div><strong>{mentor.name}<i>✓</i></strong><p>{mentor.headline}</p><small>{mentor.skills.slice(0,3).join(" • ")}</small></div><div className="explorerMeta"><b>{mentor.priceFrom} {mentor.currency}</b><span>{mentor.nextAvailable}</span></div></Link>)}
+      <section className="proSection problemSection">
+        <div className="shell problemLayout">
+          <div className="problemIntro" data-reveal><span className="sectionKicker">ابدأ من المشكلة</span><h2>لا تحتاج أن تعرف اسم التخصص الذي تبحث عنه.</h2><p>صف الموقف كما هو. البحث في Mentora مصمم حول ما تريد حله، ثم يمكنك تضييق النتائج بالمهارة، السعر، اللغة والموعد.</p><Link href="/explore" className="btn secondaryBtn">ابدأ البحث <UiIcon name="arrow" size={18}/></Link></div>
+          <div className="problemCards">
+            {problems.map((problem, index) => <Link data-reveal href={`/explore?q=${encodeURIComponent(problem)}`} key={problem} className="problemCard"><span>0{index + 1}</span><p>{problem}</p><UiIcon name="arrow" size={18}/></Link>)}
           </div>
         </div>
       </section>
 
-      <section className="homeSection categorySection">
-        <div className="shell"><div className="sectionSplitHeading" data-reveal><div><span className="kicker">ابحث حسب المجال</span><h2>خبرة عملية في التحديات التي تواجهك يوميًا.</h2></div><Link href="/explore">عرض كل التخصصات ←</Link></div><div className="modernCategoryGrid">{categories.map(([icon,title,desc])=><Link href={`/explore?q=${encodeURIComponent(title)}`} className="modernCategory" key={title} data-reveal><span>{icon}</span><div><h3>{title}</h3><p>{desc}</p></div><b>←</b></Link>)}</div></div>
-      </section>
-
-      <section className="networkSection">
-        <div className="shell networkInner" data-reveal>
-          <div className="networkVisual"><div className="orbit orbitOne"><i>SEO</i><i>AI</i><i>GTM</i></div><div className="orbit orbitTwo"><i>Ads</i><i>UX</i><i>Sales</i></div><div className="networkCenter">M<span>.</span></div></div>
-          <div className="networkCopy"><span className="kicker lightKicker">شبكة لا فرد واحد</span><h2>ابنِ حولك دائرة خبرة، بدل أن تتخذ كل قرار وحدك.</h2><p>احجز جلسة عندما تحتاج رأيًا متخصصًا، ثم عد بخبير آخر عندما تتغير المشكلة. مع الوقت يصبح لديك سجل قرارات، جلسات، ملخصات وأشخاص تعرف متى تستعين بهم.</p><div className="networkFeatures"><span>✓ جلسات منفردة</span><span>✓ باقات متعددة</span><span>✓ متابعة مستمرة</span></div></div>
+      <section className="proSection processSection">
+        <div className="shell">
+          <div className="sectionHeading centered" data-reveal><span className="sectionKicker">كيف تعمل Mentora؟</span><h2>من سؤال مربك إلى خطوة واضحة.</h2><p>تدفق بسيط، بدون تعقيد غير ضروري، حتى تصل إلى الجلسة التي تحتاجها بسرعة.</p></div>
+          <div className="processGrid">
+            {steps.map((step) => <article className="processCard" data-reveal key={step.n}><div className="processIcon"><UiIcon name={step.icon} size={23}/></div><span className="processNumber">{step.n}</span><h3>{step.title}</h3><p>{step.text}</p></article>)}
+          </div>
         </div>
       </section>
 
-      <section className="homeSection mentorJoinSection">
-        <div className="shell mentorJoin" data-reveal><div><span className="kicker">لديك خبرة حقيقية؟</span><h2>حوّل ما تعلمته خلال سنوات إلى أثر في جلسة واحدة.</h2><p>أنشئ ملفك، حدد تخصصاتك ومواعيدك وأسعارك، واستقبل أشخاصًا يحتاجون خبرتك بالفعل. كل خبير يمر بمراجعة قبل ظهوره للعامة.</p><div className="joinSteps"><span><b>01</b> قدّم بياناتك</span><span><b>02</b> مراجعة واعتماد</span><span><b>03</b> ابدأ استقبال الجلسات</span></div></div><Link href="/become-a-mentor" className="btn darkBtn">قدّم كخبير ←</Link></div>
+      <section className="proSection categoryProSection">
+        <div className="shell">
+          <div className="sectionHeading splitHeading" data-reveal><div><span className="sectionKicker">مجالات الخبرة</span><h2>خبرة عملية عبر أهم القرارات المهنية.</h2></div><Link href="/explore" className="textLink">كل المجالات <UiIcon name="arrow" size={17}/></Link></div>
+          <div className="categoryProGrid">
+            {categories.map((category) => <Link data-reveal href={`/explore?q=${encodeURIComponent(category.title)}`} className="categoryProCard" key={category.title}><div className="categoryIconPro"><UiIcon name={category.icon} size={22}/></div><div><h3>{category.title}</h3><p>{category.text}</p></div><UiIcon name="arrow" size={18}/></Link>)}
+          </div>
+        </div>
       </section>
 
-      <section className="finalHomeCta">
-        <div className="shell finalCtaInner" data-reveal><span className="kicker lightKicker">ابدأ بالمشكلة، لا بالبحث</span><h2>هناك شخص سبق أن حل ما أنت عالق فيه الآن.</h2><p>أخبر Mentora بما تريد تحقيقه، واعثر على الخبير الأقرب إلى هدفك.</p><div><Link href="/explore" className="btn whiteBtn">اعثر على خبير</Link><Link href="/how-it-works" className="textCta">شاهد كيف تعمل المنصة ←</Link></div></div>
+      <section className="proSection valueSection">
+        <div className="shell valueGrid">
+          <div className="valueCopy" data-reveal><span className="sectionKicker lightKicker">لماذا جلسة 1:1؟</span><h2>لأن القرار الحقيقي يحتاج سياقك أنت.</h2><p>المقال أو الفيديو يشرح الفكرة. الجلسة الخاصة تسمح للخبير أن يسمع التفاصيل، يسأل عن القيود، ويعطيك رأيًا مرتبطًا بوضعك الحالي.</p><div className="valueChecks"><span><UiIcon name="check" size={16}/> وقتك مخصص لمشكلتك</span><span><UiIcon name="check" size={16}/> يمكنك مشاركة الأرقام والسياق</span><span><UiIcon name="check" size={16}/> تخرج بقرار وخطوات تالية</span></div></div>
+          <div className="valuePanel" data-reveal><div className="valuePanelHeader"><span>بعد الجلسة</span><span className="softStatus darkStatus"><span/> مكتمل</span></div><div className="actionItem"><span>01</span><div><b>القرار الأساسي</b><p>اختبر العرض الحالي قبل زيادة ميزانية الإعلانات.</p></div></div><div className="actionItem"><span>02</span><div><b>التجربة التالية</b><p>أنشئ صفحة هبوط جديدة برسالة واحدة واختبرها 7 أيام.</p></div></div><div className="actionItem"><span>03</span><div><b>ما الذي سنراجعه لاحقًا؟</b><p>نسبة التحويل، تكلفة الاكتساب، وجودة العملاء المحتملين.</p></div></div></div>
+        </div>
+      </section>
+
+      <section className="mentorInvite">
+        <div className="shell mentorInviteInner" data-reveal>
+          <div className="mentorInviteIcon"><UiIcon name="users" size={30}/></div>
+          <div><span className="sectionKicker lightKicker">للخبراء والمستشارين</span><h2>حوّل خبرتك إلى جلسات لها أثر واضح.</h2><p>أنشئ ملفك، حدد خدماتك وأسعارك وتوافرك، واستقبل حجوزات من أشخاص يبحثون عن خبرتك تحديدًا.</p></div>
+          <Link href="/become-a-mentor" className="btn whiteBtn">تقدّم كخبير <UiIcon name="arrow" size={18}/></Link>
+        </div>
+      </section>
+
+      <section className="finalProCta">
+        <div className="shell finalProInner" data-reveal>
+          <div><span className="sectionKicker">ابدأ من تحديك الحالي</span><h2>هناك فرق بين معرفة المعلومة ومعرفة ماذا تفعل الآن.</h2><p>اعثر على الشخص الأقرب لمشكلتك، وافهم خبرته قبل أن تحجز.</p></div>
+          <Link href="/explore" className="btn proPrimary">استكشف الخبراء <UiIcon name="arrow" size={18}/></Link>
+        </div>
       </section>
     </main>
   );
