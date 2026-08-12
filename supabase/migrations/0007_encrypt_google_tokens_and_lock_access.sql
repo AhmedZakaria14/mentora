@@ -1,3 +1,17 @@
+do $$
+begin
+  if not exists (
+    select 1 from vault.decrypted_secrets
+    where name = 'mentora_google_token_encryption_key'
+  ) then
+    perform vault.create_secret(
+      encode(extensions.gen_random_bytes(32), 'hex'),
+      'mentora_google_token_encryption_key',
+      'Encryption key for per-user Google OAuth tokens'
+    );
+  end if;
+end $$;
+
 alter table public.google_connections
   add column if not exists access_token_cipher bytea,
   add column if not exists refresh_token_cipher bytea;
